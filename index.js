@@ -23,7 +23,7 @@ client.on('message', async message => {
 
 	console.log(command);
 
-	if (command.content === 'getprice'){
+	if (command === 'getprice'){
 		console.log('get price command received.');
 
 		if (!args.length) {
@@ -44,7 +44,7 @@ client.on('message', async message => {
 		})
 	}
 
-	else if (command.content === 'setprice'){
+	else if (command === 'setprice'){
 		console.log('set price command received');
 	}
 
