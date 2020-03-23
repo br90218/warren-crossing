@@ -1,5 +1,4 @@
 const Discord = require('discord.js');
-const config = require ('./config.json');
 const Keyv = require('keyv');
 const client = new Discord.Client();
 
@@ -18,4 +17,4 @@ client.on('message', message => {
 
 keyv.on('error', err => console.error('Keyv connection error:', err));
 
-client.login(config.token);
+client.login(process.env.BOT_TOKEN);
