@@ -1,8 +1,9 @@
 const Discord = require('discord.js');
-const Keyv = require('keyv');
+const Redis = require ('redis');
 const client = new Discord.Client();
 
-const keyv = new Keyv();
+Redis.createClient(process.env.REDIS_URL);
+
 
 client.once('ready', () => {
 	console.log('Ready!');
@@ -15,6 +16,5 @@ client.on('message', message => {
 });
 
 
-keyv.on('error', err => console.error('Keyv connection error:', err));
 
 client.login(process.env.BOT_TOKEN);
