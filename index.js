@@ -9,12 +9,23 @@ client.once('ready', () => {
 	console.log('Ready!');
 });
 
-client.on('message', message => {
+client.on('message', async message => {
 	if (message.content === '!ping') {
 		message.channel.send('Pong.');
 	}
+
+	else if (message.content === 'test'){
+		Redis.get(message.member, (error, reply) => {
+			if(!error && reply)	{
+				message.channel.send(message.member.concat('\'s island sells turnips at a price of', reply))
+			}
+			else{
+				message.channel.send(message.member.concat(' has not reported their turnip price today. bad bad!'))
+			}
+		})
+	}
+
+
 });
-
-
 
 client.login(process.env.BOT_TOKEN);
