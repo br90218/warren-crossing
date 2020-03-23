@@ -28,14 +28,16 @@ client.on('message', async message => {
 
 			for (var i = 0; i < args.length; i++){
 				console.log(args[i]);
-				redisClient.get(args[i].toString().replace("!",""), (error, reply) => {
+				var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
+				redisClient.get(id, (error, reply) => {
 					if(!error && reply)	{
-						message.channel.send(args[i] + `${args[i]}'s island is buying turnips at` + reply + ' bells!')
+						var targetMember = client.users.fetch(id);
+						message.channel.send(`${targetMember}'s island is buying turnips at ` + reply + ' bells!')
 					}
 					else{
 						console.log(error);
-						message.channel.send(args[i] + `${args[i]} has not reported their turnip price of the day. bad bad!`)
-					}
+						message.channel.send(`${targetMember} has not reported their turnip price of the day. bad bad!`)
+					}1
 				})
 			}
 
@@ -44,14 +46,15 @@ client.on('message', async message => {
 
 	else if (command === 'setprice'){
 		if(args.length === 0){
-			return message.channel.send("You did not enter a price!");
+			return message.reply("You did not enter a price!");
 		}
 		else if (args.length > 1){
-			return message.channel.send("There are too many arguments!");
+			return message.reply("There are too many arguments!");
 		}
 		else{
 			console.log(message.author.toString());
-			redisClient.set(message.author.toString(), args[0].toString());
+			var id = message.author.toString().replace(/[\\<>@#&!]/g, "");
+			redisClient.set(id, args[0].toString());
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
