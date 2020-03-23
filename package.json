@@ -1,0 +1,16 @@
+{
+  "name": "warrencrossing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brian Teng",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.0.2",
+    "keyv": "^4.0.0",
+    "node.js": "0.0.1-security"
+  }
+}
