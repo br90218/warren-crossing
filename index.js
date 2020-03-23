@@ -28,7 +28,7 @@ client.on('message', async message => {
 
 			for (var i = 0; i < args.length; i++){
 				console.log(args[i]);
-				redisClient.get(args[i].toString(), (error, reply) => {
+				redisClient.get(args[i].toString().replace("!",""), (error, reply) => {
 					if(!error && reply)	{
 						message.channel.send(args[i] + `${args[i]}'s island is buying turnips at` + reply + ' bells!')
 					}
