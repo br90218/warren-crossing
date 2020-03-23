@@ -33,6 +33,7 @@ client.on('message', async message => {
 						message.channel.send(`${args[i]}'s island is buying turnips at` + reply + ' bells!')
 					}
 					else{
+						console.log(error);
 						message.channel.send(`${args[i]} has not reported their turnip price of the day. bad bad!`)
 					}
 				})
