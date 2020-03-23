@@ -27,6 +27,7 @@ client.on('message', async message => {
 		else {
 
 			for (var i = 0; i < args.length; i++){
+				console.log(args[i]);
 				redisClient.get(args[i], (error, reply) => {
 					if(!error && reply)	{
 						message.channel.send(`${args[i]}'s island is buying turnips at` + reply + ' bells!')
@@ -48,11 +49,11 @@ client.on('message', async message => {
 			return message.channel.send("There are too many arguments!");
 		}
 		else{
-			redisClient.set(message.author, args[0]);
+			redisClient.set(message.author, args[0].toString());
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
 
-});
+});	
 
 client.login(process.env.BOT_TOKEN);
