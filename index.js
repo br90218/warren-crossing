@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
-const redis = require ('redis');
+const Redis = require ('redis');
 const client = new Discord.Client();
 
-redis.createClient(process.env.REDIS_URL);
+const redisClient = Redis.createClient(process.env.REDIS_URL);
 
 
 client.once('ready', () => {
@@ -15,7 +15,7 @@ client.on('message', async message => {
 	}
 
 	else if (message.content === 'test'){
-		redis.get(message.member, (error, reply) => {
+		redisClient.get(message.member, (error, reply) => {
 			if(!error && reply)	{
 				message.channel.send(message.member.concat('\'s island sells turnips at a price of', reply))
 			}
