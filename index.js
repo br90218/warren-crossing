@@ -21,6 +21,8 @@ client.on('message', async message => {
 	const args = message.content.slice(prefix.length).trim().split(/ +/g);
 	const command = args.shift().toLowerCase();
 
+	console.log(command);
+
 	if (command.content === 'getprice'){
 		console.log('get price command received.');
 
