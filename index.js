@@ -17,7 +17,7 @@ client.on('message', async message => {
 		return;
 	}
 
-	const args = message.content.slice(prefix.length).trim().split(/ +/g);
+	const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
 	if (command === 'getprice'){
