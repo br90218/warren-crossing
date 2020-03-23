@@ -18,11 +18,20 @@ client.on('message', async message => {
 		return;
 	}
 
-	const args = message.content.slice(prefix.length).split(/ +/);
+	const args = message.content.slice(prefix.length).trim().split(/ +/g);
 	const command = args.shift().toLowerCase();
 
 	if (command.content === 'getprice'){
-		message.channel.send(`${args[0]}`);
+		console.log('get price command received.');
+
+		if (!args.length) {
+			return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
+		}
+
+		message.channel.send(`Command name: ${command}\nArguments: ${args}`);
+
+
+
 		redisClient.get(args[0], (error, reply) => {
 			if(!error && reply)	{
 				message.channel.send(message.author + '\'s island is buying turnips at ' + reply + ' bells!')
@@ -32,6 +41,11 @@ client.on('message', async message => {
 			}
 		})
 	}
+
+	else if (command.content === 'setprice'){
+		console.log('set price command received');
+	}
+
 });
 
 client.login(process.env.BOT_TOKEN);
