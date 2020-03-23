@@ -15,12 +15,12 @@ client.on('message', async message => {
 	}
 
 	else if (message.content === 'test'){
-		redisClient.get(message.member, (error, reply) => {
+		redisClient.get(message.author, (error, reply) => {
 			if(!error && reply)	{
-				message.channel.send(message.member + '\'s island is buying turnips at ' + reply + ' bells!')
+				message.channel.send(message.author + '\'s island is buying turnips at ' + reply + ' bells!')
 			}
 			else{
-				message.channel.send(message.member + ' has not reported their turnip price of the day. bad bad!')
+				message.channel.send(message.author + ' has not reported their turnip price of the day. bad bad!')
 			}
 		})
 	}
