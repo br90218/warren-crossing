@@ -20,7 +20,7 @@ client.on('message', async message => {
 				message.channel.send(message.author + '\'s island is buying turnips at ' + reply + ' bells!')
 			}
 			else{
-				message.channel.send(message.author + ' has not reported their turnip price of the day. bad bad!')
+				message.channel.send(`${message.author} has not reported their turnip price of the day. bad bad!`)
 			}
 		})
 	}
