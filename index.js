@@ -3,6 +3,7 @@ const Redis = require ('redis');
 const client = new Discord.Client();
 
 const redisClient = Redis.createClient(process.env.REDIS_URL);
+const { promisify } = require ("util");
 const prefix = process.env.PREFIX;
 
 client.once('ready', () => {
@@ -31,7 +32,7 @@ client.on('message', async message => {
 				var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
 				redisClient.get(id, (error, reply) => {
 					if(!error && reply)	{
-						var targetMember = client.users.fetch(id);
+						var targetMember = await client.users.fetch(id);
 						message.channel.send(`${targetMember}'s island is buying turnips at ` + reply + ' bells!')
 					}
 					else{
