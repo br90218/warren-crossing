@@ -17,10 +17,10 @@ client.on('message', async message => {
 	else if (message.content === 'test'){
 		redisClient.get(message.member, (error, reply) => {
 			if(!error && reply)	{
-				message.channel.send(message.member.concat('\'s island sells turnips at a price of', reply))
+				message.channel.send(message.member + '\'s island is buying turnips at ' + reply + ' bells!')
 			}
 			else{
-				message.channel.send(message.member.concat(' has not reported their turnip price today. bad bad!'))
+				message.channel.send(message.member + ' has not reported their turnip price of the day. bad bad!')
 			}
 		})
 	}
