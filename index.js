@@ -22,6 +22,7 @@ client.on('message', async message => {
 	const command = args.shift().toLowerCase();
 
 	if (command.content === 'getprice'){
+		message.channel.send(`${args[0]}`);
 		redisClient.get(args[0], (error, reply) => {
 			if(!error && reply)	{
 				message.channel.send(message.author + '\'s island is buying turnips at ' + reply + ' bells!')
