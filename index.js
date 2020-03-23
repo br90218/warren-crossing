@@ -14,38 +14,43 @@ client.on('message', async message => {
 
 	if (message.author.bot) return;
 	if (!message.content.startsWith(prefix)){
-		console.log(message.content);
 		return;
 	}
 
 	const args = message.content.slice(prefix.length).trim().split(/ +/g);
 	const command = args.shift().toLowerCase();
 
-	console.log(command);
-
 	if (command === 'getprice'){
-		console.log('get price command received.');
+		if(args.length === 0){
 
-		if (!args.length) {
-			return message.channel.send(`You didn't provide any arguments, ${message.author}!`);
 		}
+		else {
 
-		message.channel.send(`Command name: ${command}\nArguments: ${args}`);
-
-
-
-		redisClient.get(args[0], (error, reply) => {
-			if(!error && reply)	{
-				message.channel.send(message.author + '\'s island is buying turnips at ' + reply + ' bells!')
+			for (var i = 0; i < args.length; i++){
+				redisClient.get(args[i], (error, reply) => {
+					if(!error && reply)	{
+						message.channel.send(`${args[i]}'s island is buying turnips at` + reply + ' bells!')
+					}
+					else{
+						message.channel.send(`${args[i]} has not reported their turnip price of the day. bad bad!`)
+					}
+				})
 			}
-			else{
-				message.channel.send(`${args[0]} has not reported their turnip price of the day. bad bad!`)
-			}
-		})
+
+		}
 	}
 
 	else if (command === 'setprice'){
-		console.log('set price command received');
+		if(args.length === 0){
+			return message.channel.send("You did not enter a price!");
+		}
+		else if (args.length > 1){
+			return message.channel.send("There are too many arguments!");
+		}
+		else{
+			redisClient.set(message.author, args[0]);
+			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
+		}
 	}
 
 });
