@@ -30,7 +30,7 @@ client.on('message', async message => {
 			for (var i = 0; i < args.length; i++){
 				console.log(args[i]);
 				var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
-				redisClient.get(id, (error, reply) => {
+				redisClient.get(id, async(error, reply) => {
 					if(!error && reply)	{
 						var targetMember = await client.users.fetch(id);
 						message.channel.send(`${targetMember}'s island is buying turnips at ` + reply + ' bells!')
