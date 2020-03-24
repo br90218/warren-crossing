@@ -29,7 +29,7 @@ client.on('message', async message => {
 				redisClient.get(id, async(error, reply) => {
 					if(!error && reply) {
 						var targetMember = await client.users.fetch(id);
-						result += `${targetMember}'s island is buying turnips at **` + reply + '** bells!\n';
+						result = result.concat(result,`${targetMember}'s island is buying turnips at **` + reply + '** bells!\n');
 					}
 				})
 			});
