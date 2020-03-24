@@ -22,7 +22,7 @@ client.on('message', async message => {
 
 	if (command === 'getprice'){
 		if(args.length === 0){
-			var result = "";
+			var result = "Here are all records so far\n";
 			message.guild.members.cache.forEach(user => {
 				var id = user.toString().replace(/[\\<>@#&!]/g, "");
 
