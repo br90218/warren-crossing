@@ -62,6 +62,8 @@ client.on('message', async message => {
 			return message.reply("There are too many arguments!");
 		}
 		else{
+			if (typeof args[0] !== 'number') return message.reply("It's not a number!");
+
 			console.log(message.author.toString());
 			var id = message.author.toString().replace(/[\\<>@#&!]/g, "");
 			redisClient.set(id, args[0].toString(), 'EX', 60 * 60 * 20);
