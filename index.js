@@ -30,6 +30,7 @@ client.on('message', async message => {
 					if(!error && reply) {
 						var targetMember = await client.users.fetch(id);
 						result = result.concat(result,`${targetMember}'s island is buying turnips at **`, reply, '** bells!\n');
+						message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!\n');
 					}
 				})
 			});
