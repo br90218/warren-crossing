@@ -23,7 +23,9 @@ client.on('message', async message => {
 
 	if (command === 'getprice'){
 		if(args.length === 0){
-			message.guild.members.every(user => {console.log(user.toString())})
+			message.guild.members.cache.forEach(user => {
+				console.log(user.toString());
+			});
 		}
 		else {
 
