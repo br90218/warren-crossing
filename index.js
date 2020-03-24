@@ -24,7 +24,13 @@ client.on('message', async message => {
 	if (command === 'getprice'){
 		if(args.length === 0){
 			message.guild.members.cache.forEach(user => {
-				console.log(user.toString());
+				var id = user.toString().replace(/[\\<>@#&!]/g, "");
+				redisClient.get(id, async(error, reply) => {
+					if(!error && reply) {
+						var targetMember = await client.users.fetch(id);
+						message.channel.send(`${targetMember}'s island is buying turnips at ` + reply + ' bells!');
+					}
+				})
 			});
 		}
 		else {
@@ -35,7 +41,7 @@ client.on('message', async message => {
 				redisClient.get(id, async(error, reply) => {
 					if(!error && reply)	{
 						var targetMember = await client.users.fetch(id);
-						message.channel.send(`${targetMember}'s island is buying turnips at ` + reply + ' bells!')
+						message.channel.send(`${targetMember}'s island is buying turnips at ` + reply + ' bells!');
 					}
 					else{
 						console.log(error);
