@@ -57,7 +57,6 @@ client.on('message', async message => {
 			var result = "Here are all records so far:\n"
 			message.guild.members.cache.forEach(user => {
 				var id = user.toString().replace(/[\\<>@#&!]/g, "");
-
 				redisClient.get(id, async(error, reply) => {
 					if(!error && reply) {
 						
@@ -107,7 +106,8 @@ client.on('message', async message => {
 			//if (typeof args[0] !== 'number') return message.reply("It's not a number!");
 
 			console.log(message.author.toString());
-			var id = message.author.toString().replace(/[\\<>@#&!]/g, "");
+			var id = message.author.id;
+			console.log(id);
 			redisClient.set(id, args[0].toString(), 'EX', 60 * 60 * 20);
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
