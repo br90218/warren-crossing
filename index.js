@@ -27,7 +27,7 @@ client.on('message', async message => {
 				redisClient.get(id, async(error, reply) => {
 					if(!error && reply) {
 						var targetMember = await client.users.fetch(id);
-						message.channel.send(`${targetMember}'s island is buying turnips at ` + reply + ' bells!');
+						message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!');
 					}
 				})
 			});
