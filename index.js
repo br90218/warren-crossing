@@ -3,7 +3,6 @@ const Redis = require ('redis');
 const client = new Discord.Client();
 
 const redisClient = Redis.createClient(process.env.REDIS_URL);
-const { promisify } = require ("util");
 const prefix = process.env.PREFIX;
 
 client.once('ready', () => {
@@ -34,7 +33,6 @@ client.on('message', async message => {
 			});
 		}
 		else {
-
 			for (var i = 0; i < args.length; i++){
 				console.log(args[i]);
 				var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
@@ -67,6 +65,14 @@ client.on('message', async message => {
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
+
+	else if (command === 'help'){
+		message.channel.send('Hi! This is Warren Turnip. I help keep track of everyone\'s turnip price of the day.');
+		message.channel.send('Use *!turnip setprice [PRICE]* to report your price today');
+		message.channel.send('Use *!turnip getprice [user]* to check for their offer today (If USER is not specified, I will tell you everyone\'s offers today!');
+	}
+
+
 
 });	
 
