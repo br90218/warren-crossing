@@ -33,6 +33,7 @@ client.on('message', async message => {
 					}
 				})
 			});
+			console.log(result);
 			message.channel.send(result);
 		}
 		else {
