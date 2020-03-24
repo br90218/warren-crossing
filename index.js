@@ -30,7 +30,7 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 		}
 		collection = returncollection;
 	});
-	collection.createIndex(userIDindex, function(err, result){
+	collection.createIndex(userIDindex, {unique: true}, function(err, result){
 		if(err){
 			console.log('unable to create index to this collection. Error dump: ', err);
 		}
