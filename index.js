@@ -22,15 +22,18 @@ client.on('message', async message => {
 
 	if (command === 'getprice'){
 		if(args.length === 0){
+			var result = "";
 			message.guild.members.cache.forEach(user => {
 				var id = user.toString().replace(/[\\<>@#&!]/g, "");
+
 				redisClient.get(id, async(error, reply) => {
 					if(!error && reply) {
 						var targetMember = await client.users.fetch(id);
-						message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!');
+						result.concat(`${targetMember}'s island is buying turnips at **` + reply + '** bells!\n');
 					}
 				})
 			});
+			message.channel.send(result);
 		}
 		else {
 			for (var i = 0; i < args.length; i++){
