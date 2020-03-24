@@ -9,7 +9,8 @@ var collection;
 const redisClient = Redis.createClient(process.env.REDIS_URL);
 const prefix = process.env.PREFIX;
 
-const index = { userid: 1, price: -1}
+const userIDindex = { userid: 1 }
+const priceIndex = { price: -1 }
 
 
 mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
@@ -29,11 +30,12 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 		}
 		collection = returncollection;
 	});
-	collection.createIndex(index, function(err, result){
+	collection.createIndex(userIDindex, function(err, result){
 		if(err){
 			console.log('unable to create index to this collection. Error dump: ', err);
 		}
 	});
+	collection.createIndex(priceIndex);
 });
 
 client.once('ready', function () {
@@ -109,6 +111,10 @@ client.on('message', async message => {
 			var id = message.author.id;
 			console.log(id);
 			redisClient.set(id, args[0].toString(), 'EX', 60 * 60 * 20);
+			
+			var cursor = collection.find({ userid: id });
+			
+			collection.updateOne({ userid: id }, { userid: id, price: parseInt(args[0])}, { upsert: true});
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
