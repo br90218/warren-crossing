@@ -9,6 +9,8 @@ var collection;
 const redisClient = Redis.createClient(process.env.REDIS_URL);
 const prefix = process.env.PREFIX;
 
+const index = { userid: 1, price: -1}
+
 
 mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 	if (err){
@@ -26,6 +28,11 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 			console.log('Connection to db and collection estalished.');
 		}
 		collection = returncollection;
+	});
+	collection.createIndex(index, function(err, result){
+		if(err){
+			console.log('unable to create index to this collection. Error dump: ', err);
+		}
 	});
 });
 
