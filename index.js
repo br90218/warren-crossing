@@ -112,9 +112,7 @@ client.on('message', async message => {
 			console.log(id);
 			redisClient.set(id, args[0].toString(), 'EX', 60 * 60 * 20);
 			
-			var cursor = collection.find({ userid: id });
-			
-			collection.updateOne({ userid: id }, { userid: id, price: parseInt(args[0])}, { upsert: true});
+			collection.updateOne({ userid: id }, { $set: { price: parseInt(args[0])}}, { upsert: true});
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
