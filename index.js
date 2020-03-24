@@ -61,7 +61,7 @@ client.on('message', async message => {
 		else{
 			console.log(message.author.toString());
 			var id = message.author.toString().replace(/[\\<>@#&!]/g, "");
-			redisClient.set(id, args[0].toString());
+			redisClient.set(id, args[0].toString(), "EX 72000");
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
