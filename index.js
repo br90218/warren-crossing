@@ -10,7 +10,7 @@ const redisClient = Redis.createClient(process.env.REDIS_URL);
 const prefix = process.env.PREFIX;
 
 
-client.once('ready', async () => {
+client.once('ready', () => {
 	mongoClient.connect(process.env.MONGODB_URI, function(err, db) {
 		if (err){
 			console.log('unable to connect to the mongoDB server. Error dump: ', err);
@@ -19,7 +19,7 @@ client.once('ready', async () => {
 			console.log('Connection established to: ', process.env.MONGODB_URI);
 		}
 
-		await db.collection('TurnipPrices', function (err, returncollection) {
+		db.collection('TurnipPrices', function (err, returncollection) {
 			if(err){
 				console.log('unable to connect to the designated db/collection. Error dump: ', err);
 			}
