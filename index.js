@@ -32,6 +32,9 @@ client.on('message', async message => {
 							result += (`${user}'s island is buying turnips at **` + reply + '** bells!\n')
 						})
 					}
+					else{
+						console.log(error);
+					}
 				})
 			});
 			console.log(result);
