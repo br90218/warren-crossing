@@ -1,11 +1,33 @@
 const Discord = require('discord.js');
 const Redis = require ('redis');
+
+const mongodb = require ('mongodb');
+const mongoClient = mongodb.MongoClient;
 const client = new Discord.Client();
+const collection;
 
 const redisClient = Redis.createClient(process.env.REDIS_URL);
 const prefix = process.env.PREFIX;
 
+
 client.once('ready', () => {
+	mongoClient.connect(process.env.MONGODB_URI, function(err, db) {
+		if (err){
+			console.log('unable to connect to the mongoDB server. Error dump: ', err);
+		}
+		else {
+			console.log('Connection established to: ', process.env.MONGODB_URI);
+		}
+
+		collection = mongoClient.db().collection('TurnipPrices', function (err, db) {
+			if(err){
+				console.log('unable to connect to the designated db/collection. Error dump: ', err);
+			}
+			else {
+				console.log('Connection to db and collection estalished.');
+			}
+		});
+	});
 	console.log('Ready!');
 });
 
