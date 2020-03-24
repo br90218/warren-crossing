@@ -39,7 +39,7 @@ client.on('message', async message => {
 				redisClient.get(id, async(error, reply) => {
 					if(!error && reply)	{
 						var targetMember = await client.users.fetch(id);
-						message.channel.send(`${targetMember}'s island is buying turnips at ` + reply + ' bells!');
+						message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!');
 					}
 					else{
 						console.log(error);
@@ -68,8 +68,8 @@ client.on('message', async message => {
 
 	else if (command === 'help'){
 		message.channel.send('Hi! This is Warren Turnip. I help keep track of everyone\'s turnip price of the day.');
-		message.channel.send('Use *!turnip setprice [PRICE]* to report your price today');
-		message.channel.send('Use *!turnip getprice [user]* to check for their offer today (If USER is not specified, I will tell you everyone\'s offers today!');
+		message.channel.send('Use **!turnip setprice [PRICE]** to report your price today');
+		message.channel.send('Use **!turnip getprice [user]** to check for their offer today (If USER is not specified, I will tell you everyone\'s offers today!');
 	}
 
 
