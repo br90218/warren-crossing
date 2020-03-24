@@ -33,7 +33,7 @@ client.on('message', async message => {
 						//message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!\n');
 						
 						client.users.fetch(id).then(user => {
-							result += `${user}'s island is buying turnips at **`, reply, '** bells!\n';
+							result += (`${user}'s island is buying turnips at **` + reply + '** bells!\n')
 						})
 
 
