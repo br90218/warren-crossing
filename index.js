@@ -4,7 +4,7 @@ const Redis = require ('redis');
 const mongodb = require ('mongodb');
 const mongoClient = mongodb.MongoClient;
 const client = new Discord.Client();
-const collection;
+var collection;
 
 const redisClient = Redis.createClient(process.env.REDIS_URL);
 const prefix = process.env.PREFIX;
