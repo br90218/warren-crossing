@@ -60,10 +60,9 @@ client.on('message', async message => {
 			 await collection.find().sort(priceIndex).forEach(async function (doc){
 				client.users.fetch(doc.userid).then( function (value){
 					result += `${value}'s island is buying turnips at **`;
-					console.log(result);
 				})			
 			})
-			console.log(result);
+			message.channel.send(result);
 		}
 		else {
 			for (var i = 0; i < args.length; i++){
