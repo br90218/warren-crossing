@@ -79,7 +79,9 @@ client.on('message', async message => {
 			// message.channel.send(result);
 
 			collection.find().sort(priceIndex).forEach(async function (doc){
-				var targetMember = await client.users.fetch(doc.userid);
+				client.users.fetch(doc.userid).then( function (value){
+					console.log(value);
+				})
 				result += `${targetMember}'s island is buying turnips at **`;
 			})
 
