@@ -57,13 +57,13 @@ client.on('message', async message => {
 	if (command === 'getprice'){
 		if(args.length === 0){
 			var result = "Here are all records so far:\n"
-			collection.find().sort(priceIndex).forEach(async function (doc){
+			 await collection.find().sort(priceIndex).forEach(async function (doc){
 				client.users.fetch(doc.userid).then( function (value){
-					console.log(`${value}'s island is buying turnips at **`);
 					result += `${value}'s island is buying turnips at **`;
 					console.log(result);
 				})			
 			})
+			console.log(result);
 		}
 		else {
 			for (var i = 0; i < args.length; i++){
