@@ -58,7 +58,7 @@ client.on('message', async message => {
 		if(args.length === 0){
 			var result = "Here are all records so far:\n"
 			 await collection.find().sort(priceIndex).forEach(async function (doc){
-				client.users.fetch(doc.userid).then( function (value){
+				message.guild.members.fetch(doc.userid).then( function (value){
 					result += (`${value}'s island is buying turnips at **` + doc.price + '** bells!');
 				})			
 			})
@@ -68,8 +68,8 @@ client.on('message', async message => {
 			for (var i = 0; i < args.length; i++){
 				console.log(args[i]);
 				var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
-				var targetMember = await client.users.fetch(id).catch((()=>{
-					message.channel.send(id + 'is not a valid member!');
+				var targetMember = await message.guild.members.fetch(id).catch((()=>{
+					return message.channel.send('**' + id + '** is not a valid member in this server!');
 				}))
 				// redisClient.get(id, async(error, reply) => {
 				// 	if(!error && reply)	{
@@ -90,7 +90,6 @@ client.on('message', async message => {
 						message.channel.send(`${targetMember} has not reported their price today. Bad bad!`);
 					}
 					else{
-
 						message.channel.send(`${targetMember}'s island is buying turnips at **` + result.price + '** bells!')
 					}
 				})
@@ -109,7 +108,7 @@ client.on('message', async message => {
 		else{
 			if (isNaN(args[0])) {
 				console.log('Received args that is not a number: ', args[0]);
-				return message.reply("It's not a number!");
+				return message.reply("That was not a number!");
 				
 			}
 			console.log(message.author.toString());
