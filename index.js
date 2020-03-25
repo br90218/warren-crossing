@@ -1,12 +1,10 @@
 const Discord = require('discord.js');
-const Redis = require ('redis');
 
 const mongodb = require ('mongodb');
 const mongoClient = mongodb.MongoClient;
 const client = new Discord.Client();
 var collection;
 
-const redisClient = Redis.createClient(process.env.REDIS_URL);
 const prefix = process.env.PREFIX;
 
 const userIDindex = { userid: 1 }
