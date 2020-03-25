@@ -82,16 +82,27 @@ client.on('message', async message => {
 			for (var i = 0; i < args.length; i++){
 				console.log(args[i]);
 				var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
-				redisClient.get(id, async(error, reply) => {
-					if(!error && reply)	{
-						var targetMember = await client.users.fetch(id);
-						message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!');
+				// redisClient.get(id, async(error, reply) => {
+				// 	if(!error && reply)	{
+				// 		var targetMember = await client.users.fetch(id);
+				// 		message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!');
+				// 	}
+				// 	else{
+				// 		console.log(error);
+				// 		message.channel.send(`${targetMember} has not reported their turnip price of the day. bad bad!`)
+				// 	}1
+				// })
+				
+				collection.findOne({userid: id}, async function (err, result){
+					if(err){
+						console.log("An error has occured when trying to retrieve record for" + id.toString() + ":", err);
 					}
 					else{
-						console.log(error);
-						message.channel.send(`${targetMember} has not reported their turnip price of the day. bad bad!`)
-					}1
+						var targetMember = await client.users.fetch(id);
+						message.channel.send(`${targetMember}'s island is buying turnips at **` + result.price + '** bells!')
+					}
 				})
+
 			}
 		}
 	}
