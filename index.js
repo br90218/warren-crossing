@@ -68,6 +68,9 @@ client.on('message', async message => {
 			for (var i = 0; i < args.length; i++){
 				console.log(args[i]);
 				var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
+				var targetMember = await client.users.fetch(id).catch((()=>{
+					message.channel.send(id + 'is not a valid member!');
+				}))
 				// redisClient.get(id, async(error, reply) => {
 				// 	if(!error && reply)	{
 				// 		var targetMember = await client.users.fetch(id);
@@ -83,8 +86,11 @@ client.on('message', async message => {
 					if(err){
 						console.log("An error has occured when trying to retrieve record for" + id.toString() + ":", err);
 					}
+					else if (!result){
+						message.channel.send(`${targetMember} has not reported their price today. Bad bad!`);
+					}
 					else{
-						var targetMember = await client.users.fetch(id);
+
 						message.channel.send(`${targetMember}'s island is buying turnips at **` + result.price + '** bells!')
 					}
 				})
