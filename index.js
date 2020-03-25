@@ -59,10 +59,10 @@ client.on('message', async message => {
 			var result = "Here are all records so far:\n"
 			 await collection.find().sort(priceIndex).forEach(async function (doc){
 				message.guild.members.fetch(doc.userid).then( function (value){
-					result += (`${value}'s island is buying turnips at **` + doc.price + '** bells!');
+					result += (`${value}'s island is buying turnips at **` + doc.price + '** bells!\n');
 				})			
 			})
-			if (result === result){
+			if (result === "Here are all records so far:\n"){
 				result += 'No one has reported buying prices today. Be the first!';
 			}
 			message.channel.send(result);
