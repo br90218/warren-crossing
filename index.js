@@ -11,6 +11,7 @@ const prefix = process.env.PREFIX;
 
 const userIDindex = { userid: 1 }
 const priceIndex = { price: -1 }
+const expIndex = {expireAt: 1}
 
 
 mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
@@ -36,6 +37,7 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 		}
 	});
 	collection.createIndex(priceIndex);
+	collection.createIndex(expIndex, {expireAfterSeconds : 0});
 });
 
 client.once('ready', function () {
@@ -111,9 +113,10 @@ client.on('message', async message => {
 				return message.reply("That was not a number!");
 				
 			}
-			console.log(message.author.toString());
 			var id = message.author.id;
-			collection.updateOne({ userid: id }, { $set: { price: parseInt(args[0])}}, { upsert: true});
+			var expDate = new Date();
+			expDate = new Date(expDate.getUTCFullYear(), expDate.getUTCMonth(), expDate.getUTCDate() + 1, 11, 0, 0, 0);
+			collection.updateOne({ userid: id }, { $set: { price: parseInt(args[0]), expireAt: expDate}}, { upsert: true});
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
@@ -121,7 +124,21 @@ client.on('message', async message => {
 	else if (command === 'help'){
 		message.channel.send('Hi! This is Warren Turnip. I help keep track of everyone\'s turnip price of the day.');
 		message.channel.send('Use **!turnip setprice [PRICE]** to report your price today');
-		message.channel.send('Use **!turnip getprice [USER]** to check for their offer today (If USER is not specified, I will tell you everyone\'s offers today!');
+		message.channel.send('Use **!turnip getprice [@USER1, @USER2, @USER3...]** to check for their offers today (If USER is not specified, I will tell you everyone\'s offers today!');
+	}
+
+	else if (command === 'updates'){
+		var info = 'Hi! It\'s been a while. During this time, crazy coder Brian has made the following adjustments:\n'
+		info += 'I stopped using Heroku Redis, it was not the right platform. I now use MongoDB! Since I have migrated, you will need to input again.\n'
+		info += 'My incapability of listing out all the prices of the day has been fixed. Plus, now it *should* list out all the prices from highest to lowest.\n'
+		info += 'My incapability of listing out everything in one message has been fixed.\n'
+		info += 'I can now identify an actual number, so don\'t feed me SHIT again.\n'
+		info += 'You can now tag multiple people in one take! Refer to **!turnip help** for more info!\n'
+		info += '...hmm, I think that\'s pretty much it. Please let Brian know if I\'m not working again.'
+
+
+		message.channel.send(info);
+
 	}
 
 
