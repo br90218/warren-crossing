@@ -64,6 +64,9 @@ client.on('message', async message => {
 					result += (`${value}'s island is buying turnips at **` + doc.price + '** bells!');
 				})			
 			})
+			if (result === result){
+				result += 'No one has reported buying prices today. Be the first!';
+			}
 			message.channel.send(result);
 		}
 		else {
@@ -73,16 +76,6 @@ client.on('message', async message => {
 				var targetMember = await message.guild.members.fetch(id).catch((()=>{
 					return message.channel.send('**' + id + '** is not a valid member in this server!');
 				}))
-				// redisClient.get(id, async(error, reply) => {
-				// 	if(!error && reply)	{
-				// 		var targetMember = await client.users.fetch(id);
-				// 		message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!');
-				// 	}
-				// 	else{
-				// 		console.log(error);
-				// 		message.channel.send(`${targetMember} has not reported their turnip price of the day. bad bad!`)
-				// 	}1
-				// })
 				
 				collection.findOne({userid: id}, async function (err, result){
 					if(err){
