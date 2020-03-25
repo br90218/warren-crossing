@@ -79,12 +79,11 @@ client.on('message', async message => {
 			// message.channel.send(result);
 
 			collection.find().sort(priceIndex).forEach(async function (doc){
-				var targetMember = client.users.fetch(doc.userid).then( () =>{
-					result += (`${targetMember}'s island is buying turnips at **` + doc.price + '** bells!\n');
-				})			
+				var targetMember = client.users.fetch(doc.userid);
+				result += (`${targetMember}'s island is buying turnips at **` + doc.price + '** bells!\n');
 			})
 
-			message.channel.send(result);
+			await message.channel.send(result);
 
 
 
