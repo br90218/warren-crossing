@@ -104,15 +104,14 @@ client.on('message', async message => {
 			return message.reply("There are too many arguments!");
 		}
 		else{
-			var str = args[0].slice(1);
-			if (!isNaN(str)) {
-				console.log('Received args that is not a number:_', str);
+			if (isNaN(args[0])) {
+				console.log('Received args that is not a number: ', args[0]);
 				return message.reply("It's not a number!");
 				
 			}
 			console.log(message.author.toString());
 			var id = message.author.id;
-			collection.updateOne({ userid: id }, { $set: { price: parseInt(str)}}, { upsert: true});
+			collection.updateOne({ userid: id }, { $set: { price: parseInt(args[0])}}, { upsert: true});
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
