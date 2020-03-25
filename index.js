@@ -57,26 +57,36 @@ client.on('message', async message => {
 	if (command === 'getprice'){
 		if(args.length === 0){
 			var result = "Here are all records so far:\n"
-			message.guild.members.cache.forEach(user => {
-				var id = user.toString().replace(/[\\<>@#&!]/g, "");
-				redisClient.get(id, async(error, reply) => {
-					if(!error && reply) {
+			// message.guild.members.cache.forEach(user => {
+			// 	var id = user.toString().replace(/[\\<>@#&!]/g, "");
+			// 	redisClient.get(id, async(error, reply) => {
+			// 		if(!error && reply) {
 						
-						var targetMember = await client.users.fetch(id);
-						result = result.concat(result,`${targetMember}'s island is buying turnips at **`, reply, '** bells!\n');
-						message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!\n');
+			// 			var targetMember = await client.users.fetch(id);
+			// 			result = result.concat(result,`${targetMember}'s island is buying turnips at **`, reply, '** bells!\n');
+			// 			message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!\n');
 
-						//client.users.fetch(id).then(user => {
-						//	result += (`${user}'s island is buying turnips at **` + reply + '** bells!\n')
-						//})
-					}
-					else{
-						console.log(error);
-					}
-				})
-			});
-			console.log(result);
+			// 			//client.users.fetch(id).then(user => {
+			// 			//	result += (`${user}'s island is buying turnips at **` + reply + '** bells!\n')
+			// 			//})
+			// 		}
+			// 		else{
+			// 			console.log(error);
+			// 		}
+			// 	})
+			// });
+			// console.log(result);
+			// message.channel.send(result);
+
+			collection.find().sort(priceIndex).forEach(async function (doc){
+				var targetMember = await client.users.fetch(doc.userid);
+				result += (`${targetMember}'s island is buying turnips at **` + doc.price + '** bells!\n');
+			})
+
 			message.channel.send(result);
+
+
+
 		}
 		else {
 			for (var i = 0; i < args.length; i++){
