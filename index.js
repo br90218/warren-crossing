@@ -85,7 +85,7 @@ client.on('message', async message => {
 							message.channel.send(`${value}'s island is buying turnips at **` + result.price + '** bells!')
 						}
 					})
-				}
+				})
 			}
 		}
 	}
