@@ -115,7 +115,9 @@ client.on('message', async message => {
 			}
 			var id = message.author.id;
 			var expDate = new Date();
-			expDate = new Date(expDate.getUTCFullYear(), expDate.getUTCMonth(), expDate.getUTCDate() + 1, 11, 0, 0, 0);
+			var mod = 0;
+			if (expDate.getUTCHours() > 11) mod = 1; 
+			expDate = new Date(expDate.getUTCFullYear(), expDate.getUTCMonth(), expDate.getUTCDate() + mod, 11, 0, 0, 0);
 			collection.updateOne({ userid: id }, { $set: { price: parseInt(args[0]), expireAt: expDate}}, { upsert: true});
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
