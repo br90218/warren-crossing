@@ -93,7 +93,6 @@ client.on('message', async message => {
 					}1
 				})
 			}
-
 		}
 	}
 
@@ -105,13 +104,13 @@ client.on('message', async message => {
 			return message.reply("There are too many arguments!");
 		}
 		else{
-			//if (typeof args[0] !== 'number') return message.reply("It's not a number!");
-
+			if (!isNaN(args[0])) {
+				console.log('Received args that is not a number: ', args[0]);
+				return message.reply("It's not a number!");
+				
+			}
 			console.log(message.author.toString());
 			var id = message.author.id;
-			console.log(id);
-			redisClient.set(id, args[0].toString(), 'EX', 60 * 60 * 20);
-			
 			collection.updateOne({ userid: id }, { $set: { price: parseInt(args[0])}}, { upsert: true});
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
@@ -120,7 +119,7 @@ client.on('message', async message => {
 	else if (command === 'help'){
 		message.channel.send('Hi! This is Warren Turnip. I help keep track of everyone\'s turnip price of the day.');
 		message.channel.send('Use **!turnip setprice [PRICE]** to report your price today');
-		message.channel.send('Use **!turnip getprice [user]** to check for their offer today (If USER is not specified, I will tell you everyone\'s offers today!');
+		message.channel.send('Use **!turnip getprice [USER]** to check for their offer today (If USER is not specified, I will tell you everyone\'s offers today!');
 	}
 
 
