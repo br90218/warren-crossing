@@ -61,6 +61,7 @@ client.on('message', async message => {
 				client.users.fetch(doc.userid).then( function (value){
 					console.log(`${value}'s island is buying turnips at **`);
 					result += `${value}'s island is buying turnips at **`;
+					console.log(result);
 				})			
 			})
 		}
