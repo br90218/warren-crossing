@@ -61,7 +61,7 @@ client.on('message', async message => {
 				message.guild.members.fetch(doc.userid).then( function (value){
 					result += ( value.displayName + `'s island is buying turnips at **` + doc.price + '** bells!\n');
 				}).catch(() =>{
-					console.error("There was an error while trying to access this id: ", value);
+					console.error("There was an error while trying to access this id: ", doc.userid);
 				})			
 			})
 			if (result === "Here are all records so far:\n"){
@@ -121,13 +121,10 @@ client.on('message', async message => {
 	}
 
 	else if (command === 'updates'){
-		var info = 'Hi! It\'s been a while. During this time, crazy coder Brian has made the following adjustments:\n'
-		info += 'I stopped using Heroku Redis, it was not the right platform. I now use MongoDB! Since I have migrated, you will need to input again.\n'
-		info += 'My incapability of listing out all the prices of the day has been fixed. Plus, now it *should* list out all the prices from highest to lowest.\n'
-		info += 'My incapability of listing out everything in one message has been fixed.\n'
-		info += 'I can now identify an actual number, so don\'t feed me SHIT again.\n'
-		info += 'You can now tag multiple people in one take! Refer to **!turnip help** for more info!\n'
-		info += '...hmm, I think that\'s pretty much it. Please let Brian know if I\'m not working again.'
+		var info = 'Hi! It\'s Warren Turnip here. I hope you all had a good night\'s sleep. Here\'s what has changed:\n'
+		info += '- The **getprice** command will not mention people anymore.\n'
+		info += '- Fixed an async/await bug where the individual price checking returns erroneous results.\n'
+		info += '...\nThat\'s pretty much it! Let Brian know if anything wrong happens to me again!\n'
 
 
 		message.channel.send(info);
