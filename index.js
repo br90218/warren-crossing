@@ -59,7 +59,7 @@ client.on('message', async message => {
 			var result = "Here are all records so far:\n"
 			 await collection.find().sort(priceIndex).forEach(async function (doc){
 				message.guild.members.fetch(doc.userid).then( function (value){
-					result += (`${value}'s island is buying turnips at **` + doc.price + '** bells!\n');
+					result += ( value.nickname + `${value}'s island is buying turnips at **` + doc.price + '** bells!\n');
 				})			
 			})
 			if (result === "Here are all records so far:\n"){
@@ -74,7 +74,7 @@ client.on('message', async message => {
 				message.guild.members.fetch(id).catch((()=>{
 					return message.channel.send('**' + id + '** is not a valid member in this server!');
 				})).then (function (value){
-					collection.findOne({userid: id}, function (err, result){
+					collection.findOne({userid: id}, async function (err, result){
 						if(err){
 							console.log("An error has occured when trying to retrieve record for" + id.toString() + ":", err);
 						}
@@ -82,7 +82,7 @@ client.on('message', async message => {
 							message.channel.send(`${value} has not reported their price today. Bad bad!`);
 						}
 						else{
-							message.channel.send(`${value}'s island is buying turnips at **` + result.price + '** bells!')
+							message.channel.send(value.nickname + `'s island is buying turnips at **` + result.price + '** bells!')
 						}
 					})
 				})
