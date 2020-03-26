@@ -60,6 +60,8 @@ client.on('message', async message => {
 			 await collection.find().sort(priceIndex).forEach(async function (doc){
 				message.guild.members.fetch(doc.userid).then( function (value){
 					result += ( value.displayName + `'s island is buying turnips at **` + doc.price + '** bells!\n');
+				}).catch(() =>{
+					console.error("There was an error while trying to access this id: ", value);
 				})			
 			})
 			if (result === "Here are all records so far:\n"){
