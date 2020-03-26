@@ -72,7 +72,7 @@ client.on('message', async message => {
 				console.log(args[i]);
 				var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
 				message.guild.members.fetch(id).then (function (value){
-					collection.findOne({userid: id}).then( function (result){
+					collection.findOne({userid: value.id}).then( function (result){
 						if (!result){
 							message.channel.send(`${value} has not reported their price today. Bad bad!`);
 						}
