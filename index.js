@@ -72,16 +72,15 @@ client.on('message', async message => {
 				console.log(args[i]);
 				var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
 				message.guild.members.fetch(id).then (function (value){
-					collection.findOne({userid: id}, async function (err, result){
-						if(err){
-							console.log("An error has occured when trying to retrieve record for" + id.toString() + ":", err);
-						}
-						else if (!result){
+					collection.findOne({userid: id}).then( function (result){
+						if (!result){
 							message.channel.send(`${value} has not reported their price today. Bad bad!`);
 						}
 						else{
 							message.channel.send( value.displayName + `'s island is buying turnips at **` + result.price + '** bells!')
 						}
+					}).catch((err) => {
+						console.error("An error has occured when trying to retrieve record for" + id.toString() + ":", err);
 					})
 				}).catch((()=>{
 					return message.channel.send('**' + id + '** is not a valid member in this server!');
