@@ -59,7 +59,7 @@ client.on('message', async message => {
 			var result = "Here are all records so far:\n"
 			 await collection.find().sort(priceIndex).forEach(async function (doc){
 				message.guild.members.fetch(doc.userid).then( function (value){
-					result += ( value.nickname + `${value}'s island is buying turnips at **` + doc.price + '** bells!\n');
+					result += ( value.displayName + `'s island is buying turnips at **` + doc.price + '** bells!\n');
 				})			
 			})
 			if (result === "Here are all records so far:\n"){
