@@ -3,7 +3,8 @@ const Discord = require('discord.js');
 const mongodb = require ('mongodb');
 const mongoClient = mongodb.MongoClient;
 const client = new Discord.Client();
-var collection;
+var turnipCollection;
+var inventoryCollection;
 
 const prefix = process.env.PREFIX;
 
@@ -27,15 +28,31 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 		else {
 			console.log('Connection to db and collection estalished.');
 		}
-		collection = returncollection;
+		turnipCollection = returncollection;
 	});
-	collection.createIndex(userIDindex, {unique: true}, function(err, result){
+	turnipCollection.createIndex(userIDindex, {unique: true}, function(err, result){
 		if(err){
 			console.log('unable to create index to this collection. Error dump: ', err);
 		}
 	});
-	collection.createIndex(priceIndex);
-	collection.createIndex(expIndex, {expireAfterSeconds : 0});
+	turnipCollection.createIndex(priceIndex);
+	turnipCollection.createIndex(expIndex, {expireAfterSeconds : 0});
+
+	client.db().collection('Inventory', function (err, returncollection) {
+		if(err){
+			console.log('unable to connect to the designated db/collection. Error dump: ', err);
+		}
+		else {
+			console.log('Connection to db and collection estalished.');
+		}
+		inventoryCollection = returncollection;
+	});
+	turnipCollection.createIndex(userIDindex, {unique: true}, function(err, result){
+		if(err){
+			console.log('unable to create index to this collection. Error dump: ', err);
+		}
+	});
+
 });
 
 client.once('ready', function () {
@@ -57,7 +74,7 @@ client.on('message', async message => {
 	if (command === 'getprice'){
 		if(args.length === 0){
 			var result = "Here are all records so far:\n"
-			 await collection.find().sort(priceIndex).forEach(async function (doc){
+			 await turnipCollection.find().sort(priceIndex).forEach(async function (doc){
 				message.guild.members.fetch(doc.userid).then( function (value){
 					result += ( value.displayName + `'s island is buying turnips at **` + doc.price + '** bells!\n');
 				}).catch(() =>{
@@ -74,7 +91,7 @@ client.on('message', async message => {
 				console.log(args[i]);
 				var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
 				message.guild.members.fetch(id).then (function (value){
-					collection.findOne({userid: value.id}).then( function (result){
+					turnipCollection.findOne({userid: value.id}).then( function (result){
 						if (!result){
 							message.channel.send(`${value} has not reported their price today. Bad bad!`);
 						}
@@ -109,7 +126,7 @@ client.on('message', async message => {
 			var mod = 0;
 			if (expDate.getUTCHours() > 11) mod = 1; 
 			expDate = new Date(expDate.getUTCFullYear(), expDate.getUTCMonth(), expDate.getUTCDate() + mod, 11, 0, 0, 0);
-			collection.updateOne({ userid: id }, { $set: { price: parseInt(args[0]), expireAt: expDate}}, { upsert: true});
+			turnipCollection.updateOne({ userid: id }, { $set: { price: parseInt(args[0]), expireAt: expDate}}, { upsert: true});
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
