@@ -47,7 +47,7 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 		}
 		fossilInventoryCollection = returncollection;
 	});
-	turnipCollection.createIndex(userIDindex, {unique: true}, function(err, result){
+	fossilInventoryCollection.createIndex(userIDindex, {unique: true}, function(err, result){
 		if(err){
 			console.log('unable to create index to this collection. Error dump: ', err);
 		}
