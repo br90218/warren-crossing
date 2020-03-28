@@ -1,10 +1,11 @@
 const Discord = require('discord.js');
 
 const mongodb = require ('mongodb');
+const fossilInventoryTools = require ('./inventoryOps');
 const mongoClient = mongodb.MongoClient;
 const client = new Discord.Client();
 var turnipCollection;
-var inventoryCollection;
+var fossilInventoryCollection;
 
 const prefix = process.env.PREFIX;
 
@@ -45,7 +46,7 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 		else {
 			console.log('Connection to db and collection estalished.');
 		}
-		inventoryCollection = returncollection;
+		fossilInventoryCollection = returncollection;
 	});
 	turnipCollection.createIndex(userIDindex, {unique: true}, function(err, result){
 		if(err){
@@ -130,6 +131,68 @@ client.on('message', async message => {
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
+
+	else if (command === 'addfossil'){
+		var fossilName = []
+		var fossilCount = []
+		for ( var i = 0; i < args.length; i++ ) {
+			if(!isNaN(args[i])){
+				fossilName.push(args[i].toLowerCase())
+			}
+			else{
+				fossilCount.push(parseInt(args[i]))
+			}
+		}
+
+		if(fossilName.length != fossilCount.length){
+			return message.channel.send("You either have entered too many numbers or too many fossil names!");
+		}
+
+		var id = message.author.id;
+		fossilInventoryCollection.findOne({userid: value.id}).then( function (result){
+			var existingNames = [];
+			var existingQty = [];
+			if(result){
+				existingNames = result.Names;
+				existingQty = result.Qty;
+			}
+			existingNames = existingNames.concat(result.Names)
+			existingQty = existingQty.concat(result.Qty)
+
+			fossilInventoryCollection.updateOne({userid: id}, { $set: {Names: existingNames, Qty: existingQty}})
+		})
+	}
+
+	else if (command === 'showfossil'){
+		for (var i = 0; i < args.length; i++){
+			console.log(args[i]);
+			var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
+			message.guild.members.fetch(id).then (function (value){
+				fossilInventoryCollection.findOne({userid: value.id}).then( function (result){
+					if (!result){
+						message.channel.send(`${value} did not report any spare fossils.`);
+					}
+					else{
+						var results = value.displayName + 'has some spare fossils:\n'
+						
+						for(var i = 0; i < result.Names.length; i++){
+							result += result.Names[i] + ': ' + result.Qty[i] + '\n'
+						}
+
+
+
+
+						message.channel.send(result)
+					}
+				}).catch((err) => {
+					console.error("An error has occured when trying to retrieve record for" + id.toString() + ":", err);
+				})
+			}).catch((()=>{
+				return message.channel.send('**' + id + '** is not a valid member in this server!');
+			}))
+		}
+	}
+
 
 	else if (command === 'help'){
 		message.channel.send('Hi! This is Warren Turnip. I help keep track of everyone\'s turnip price of the day.');
