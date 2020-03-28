@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 
 const mongodb = require ('mongodb');
-const fossilInventoryTools = require ('./inventoryOps');
 const mongoClient = mongodb.MongoClient;
 const client = new Discord.Client();
 var turnipCollection;
