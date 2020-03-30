@@ -59,7 +59,7 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 		if(err){
 			console.log('unable to create index to the salesRecordCollection. Error dump: ', err);
 		}
-	})
+	});
 
 	client.db().collection('WrongCommands', function (err, returncollection) {
 		
@@ -70,14 +70,15 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 			console.log('connected!');
 		}
 		wrongCommandsCollection = returncollection;
-	})
+	});
 	wrongCommandsCollection.createIndex(userIDindex, {unique: true}, function(err, result){
 		if(err){
 			console.log('unable to create index to the wrongCommandsCollection. Error dump: ', err);
 		}
 	});
-	wrongCommandsCollection.createIndex(expIndex, {expireAfterSeconds: 20});
-}
+	wrongCommandsCollection.createIndex(expIndex, {expireAfterSeconds : 20})
+})
+
 client.once('ready', function () {
 	console.log('Ready!');
 });
@@ -242,7 +243,7 @@ client.on('message', async message => {
 		wrongCommandsCollection.updateOne({userid: message.author.id}, { $set: { command: correctedCommand }}, {upsert: true});
 		message.channel.send("Did you mean: **" + correctedCommand + "**?");
 	};	
-}
+})
 
 client.login(process.env.BOT_TOKEN);
 
