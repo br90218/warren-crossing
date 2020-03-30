@@ -109,6 +109,8 @@ client.on('message', async message => {
 	else{
 		actualCommand = message.content;
 	}
+
+	console.log(actualcommand);
 	const args = actualCommand.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
