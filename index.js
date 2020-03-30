@@ -105,7 +105,7 @@ client.on('message', async message => {
 			message.channel.send("Did you mean: **!turnip**?");
 		}
 		return;
-	}
+	}	
 	else{
 		actualCommand = message.content;
 	}
@@ -240,7 +240,8 @@ client.on('message', async message => {
 
 	else{
 		var correctedString = stringSimilarity.findBestMatch(command, ['getprice','setprice','boughtat','soldat','help','updates']).bestMatch.target;
-		var correctedCommand = '!turnip '+ correctedString + ' ' + args.join(' ');
+		var correctedCommand = '!turnip '+ correctedString;
+		if(args.length > 0) correctedCommand += ' ' + args.join(' ');
 		wrongCommandsCollection.updateOne({userid: message.author.id}, { $set: { command: correctedCommand }}, {upsert: true});
 		message.channel.send("Did you mean: **" + correctedCommand + "**?");
 	};	
