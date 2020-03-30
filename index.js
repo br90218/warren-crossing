@@ -94,6 +94,7 @@ client.on('message', async message => {
 			if(!result){
 				return message.channel.send('But sir, there\'s nothing to be corrected...');
 			}
+			console.log("Result:" + result.command);
 			actualCommand = result.command;
 		}).catch( (err) =>{
 			console.log(err);
@@ -111,6 +112,7 @@ client.on('message', async message => {
 	}
 
 	console.log(actualCommand);
+	
 	const args = actualCommand.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
