@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
-
 const mongodb = require ('mongodb');
+const stringSimilarity = require ('string-similarity')
+
+
 const mongoClient = mongodb.MongoClient;
 const client = new Discord.Client();
 
@@ -70,6 +72,10 @@ client.on('message', async message => {
 
 	if (message.author.bot) return;
 	if (!message.content.startsWith(prefix)){
+		var falseCommand = message.content.substr(0, str.indexOf(' '));
+		if(stringSimilarity.compareTwoStrings(prefix, falseCommand) > 0.6){
+			message.channel.send("Did you mean: **!turnip**?");
+		}
 		return;
 	}
 

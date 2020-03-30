@@ -13,6 +13,7 @@
     "keyv": "^4.0.0",
     "mongodb": "^3.5.5",
     "node.js": "0.0.1-security",
-    "redis": "^3.0.2"
+    "redis": "^3.0.2",
+    "string-similarity": "^4.0.1"
   }
 }
