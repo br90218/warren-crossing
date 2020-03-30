@@ -231,8 +231,8 @@ async function processCommand(actualCommand, message){
 		message.channel.send('Hi! This is Warren Turnip. I help keep track of everyone\'s turnip price of the day.');
 		message.channel.send('Use **!turnip setprice [PRICE]** to report your price today');
 		message.channel.send('Use **!turnip getprice [@USER1, @USER2, @USER3...]** to check for their offers today (If USER is not specified, I will tell you everyone\'s offers today!');
-		message.channel.send('Use **!turnip boughtat [PRICE] [QUANTITY] to report how many turnips you bought at PRICE.');
-		message.channel.send('Use **!turnip soldat [PRICE] [QUANTITY] to report how many turnips you sold at PRICE.');
+		message.channel.send('Use **!turnip boughtat [PRICE] [QUANTITY]** to report how many turnips you bought at PRICE.');
+		message.channel.send('Use **!turnip soldat [PRICE] [QUANTITY]** to report how many turnips you sold at PRICE.');
 		message.channel.send('(The _soughtat_, _boughtat_ commands assume an "all in, all out" policy. If you buy in different strategies, I might not be able to calculate your profit correctly.)')
 	}
 
@@ -249,6 +249,20 @@ async function processCommand(actualCommand, message){
 	else{
 		var correctedString = stringSimilarity.findBestMatch(command, ['getprice','setprice','boughtat','soldat','help','updates']).bestMatch.target;
 		var correctedCommand = '!turnip '+ correctedString;
+
+		var firstTrailing = args[0];
+
+		if (correctedCommand === 'getprice' || correctedCommand === 'setprice'){
+			if(stringSimilarity.compareTwoStrings(correctedCommand, 'price') > 0.5){
+				args.shift();
+			}
+		}
+		else if (correctedCommand === 'boughtat' || correctedCommand === 'soldat'){
+			if(stringSimilarity.compareTwoStrings(correctedCommand, 'at') > 0.5){
+				args.shift();
+			}
+		}
+
 		if(args.length > 0) correctedCommand += ' ' + args.join(' ');
 		wrongCommandsCollection.updateOne({userid: message.author.id}, { $set: { command: correctedCommand }}, {upsert: true});
 		message.channel.send("Did you mean: **" + correctedCommand + "**?");
