@@ -147,7 +147,7 @@ client.on('message', async message => {
 		}
 		
 		var authorId = message.author.id;
-		salesRecordCollection.updateOne({ userid: authorId }, { $set: {buyprice: parseInt(args[0]), qty: parseInt(args[1])}}, { upsert: true});
+		salesRecordCollection.updateOne({ userid: authorId }, { $setOnInsert:{netprofit: 0}, $set: {buyprice: parseInt(args[0]), qty: parseInt(args[1])}}, { upsert: true});
 		message.channel.send(message.guild.member(message.author).displayName + ' has bought ' + args[1] + ' turnips at ' + args[0] + ' bells!');
 	}
 
