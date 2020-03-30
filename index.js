@@ -114,7 +114,7 @@ client.on('message', async message => {
 })
 
 
-function processCommand(actualCommand){
+async function processCommand(actualCommand){
 	console.log("Passed in command: " + actualCommand);
 	
 	const args = actualCommand.slice(prefix.length).trim().split(/ +/);
