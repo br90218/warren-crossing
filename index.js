@@ -187,12 +187,15 @@ client.on('message', async message => {
 		message.channel.send('Hi! This is Warren Turnip. I help keep track of everyone\'s turnip price of the day.');
 		message.channel.send('Use **!turnip setprice [PRICE]** to report your price today');
 		message.channel.send('Use **!turnip getprice [@USER1, @USER2, @USER3...]** to check for their offers today (If USER is not specified, I will tell you everyone\'s offers today!');
+		message.channel.send('Use **!turnip boughtat [PRICE] [QUANTITY] to report how many turnips you bought at PRICE.');
+		message.channel.send('Use **!turnip soldat [PRICE] [QUANTITY] to report how many turnips you sold at PRICE.');
+		message.channel.send('(The _soughtat_, _boughtat_ commands assume an "all in, all out" policy. If you buy in different strategies, I might not be able to calculate your profit correctly.)')
 	}
 
 	else if (command === 'updates'){
-		var info = 'Hi! It\'s Warren Turnip here. I hope you all had a good night\'s sleep. Here\'s what has changed:\n'
-		info += '- The **getprice** command will not mention people anymore.\n'
-		info += '- Fixed an async/await bug where the individual price checking returns erroneous results.\n'
+		var info = 'Hi! It\'s Warren Turnip here. I can now do more things:\n'
+		info += '- **boughtat [price] [quantity]** will record how many turnips you bought, at what price on Sunday, conversely:\n'
+		info += '- **soldat [price] [quantity]** will record how many turnips you sold at a given price. I\'ll also take notes of the net profit you\'ve earned!\n'
 		info += '...\nThat\'s pretty much it! Let Brian know if anything wrong happens to me again!\n'
 
 
