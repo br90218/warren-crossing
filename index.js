@@ -4,6 +4,7 @@ const mongodb = require ('mongodb');
 const mongoClient = mongodb.MongoClient;
 const client = new Discord.Client();
 var collection;
+var salesRecordCollection;
 
 const prefix = process.env.PREFIX;
 
@@ -36,6 +37,21 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 	});
 	collection.createIndex(priceIndex);
 	collection.createIndex(expIndex, {expireAfterSeconds : 0});
+
+	client.db().collection('SalesRecord', function (err, returncollection) {
+		if(err){
+			console.log('unable to connect to the designated db/collection. Error dump: ', err);
+		}
+		else {
+			console.log('Connection to db and collection estalished.');
+		}
+		salesRecordCollection = returncollection;
+	});
+	salesRecordCollection.createIndex(userIDindex, {unique: true}, function(err, result){
+		if(err){
+			console.log('unable to create index to the salesRecordCollection. Error dump: ', err);
+		}
+	})
 });
 
 client.once('ready', function () {
@@ -106,13 +122,30 @@ client.on('message', async message => {
 			}
 			var id = message.author.id;
 			var expDate = new Date();
-			var mod = 0;
-			if (expDate.getUTCHours() > 11) mod = 1; 
-			expDate = new Date(expDate.getUTCFullYear(), expDate.getUTCMonth(), expDate.getUTCDate() + mod, 11, 0, 0, 0);
+			var dayModifier = 0;
+			if (expDate.getUTCHours() > 11) dayModifier = 1; 
+			expDate = new Date(expDate.getUTCFullYear(), expDate.getUTCMonth(), expDate.getUTCDate() + dayModifier, 11, 0, 0, 0);
 			collection.updateOne({ userid: id }, { $set: { price: parseInt(args[0]), expireAt: expDate}}, { upsert: true});
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
+
+	else if (command == 'boughtat'){
+		if(args.length !== 2){
+			return message.channel.send('You have invalid number of arguments: ' + args.length);
+		}
+		else if (isNaN(args[0]) || isNaN(args[1])){
+			return message.channel.send('At least one of your arguments is not a number!');
+		}
+		
+		var authorId = message.author.id;
+		salesRecordCollection.updateOne({ userid: authorId }, { $set: {buyprice: parseInt(args[0]), qty: parseInt(args[1])}}, { upsert: true});
+		message.channel.send(message.author.displayName + ' has bought ' + args[1] + ' turnips at ' + args[0] + ' bells!');
+	}
+
+
+
+
 
 	else if (command === 'help'){
 		message.channel.send('Hi! This is Warren Turnip. I help keep track of everyone\'s turnip price of the day.');
