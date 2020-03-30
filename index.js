@@ -8,6 +8,7 @@ const client = new Discord.Client();
 
 var turnipCollection;
 var salesRecordCollection;
+var wrongCommandsCollection;
 
 
 const prefix = process.env.PREFIX;
@@ -60,16 +61,31 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 		}
 	})
 
-});
-
+	client.db().collection('WrongCommands', function (err, returncollection) {
+		
+		if(err){
+			console.log(err);
+		}
+		else{
+			console.log('connected!');
+		}
+		wrongCommandsCollection = returncollection;
+	})
+	wrongCommandsCollection.createIndex(userIDindex, {unique: true}, function(err, result){
+		if(err){
+			console.log('unable to create index to the wrongCommandsCollection. Error dump: ', err);
+		}
+	});
+	wrongCommandsCollection.createIndex(expIndex, {expireAfterSeconds: 20});
+}
 client.once('ready', function () {
-	
 	console.log('Ready!');
 });
 
 client.on('message', async message => {
 	//if (!message.content.startsWith(prefix) || message.author.bot) return;
-
+	var actualCommand = '';
+	
 	if (message.author.bot) return;
 	if (!message.content.startsWith(prefix)){
 		var falseCommand = message.content.substr(0, message.content.indexOf(' '));
@@ -78,8 +94,20 @@ client.on('message', async message => {
 		}
 		return;
 	}
-
-	const args = message.content.slice(prefix.length).trim().split(/ +/);
+	else if (message.content.startsWith('!fuck')){
+		wrongCommandsCollection.findOne({userid: message.author.id}).then( function (result){
+			if(!result){
+				return message.channel.send('But sir, there\'s nothing to be corrected...');
+			}
+			actualCommand = result.command;
+		}).catch( (err) =>{
+			console.log(err);
+		})
+	}
+	else{
+		actualCommand = message.content;
+	}
+	const args = actualCommand.content.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
 	if (command === 'getprice'){
@@ -206,12 +234,15 @@ client.on('message', async message => {
 
 
 		message.channel.send(info);
-
 	}
 
-
-
-});	
+	else{
+		var correctedString = stringSimilarity.findBestMatch(command, ['getprice','setprice','boughtat','soldat','help','updates']).bestMatch.target;
+		var correctedCommand = '!turnip '+ correctedString + ' ' + args.join(' ');
+		wrongCommandsCollection.updateOne({userid: message.author.id}, { $set: { command: correctedCommand }}, {upsert: true});
+		message.channel.send("Did you mean: **" + correctedCommand + "**?");
+	};	
+}
 
 client.login(process.env.BOT_TOKEN);
 
