@@ -3,8 +3,10 @@ const Discord = require('discord.js');
 const mongodb = require ('mongodb');
 const mongoClient = mongodb.MongoClient;
 const client = new Discord.Client();
-var turnipCollection;
-var fossilInventoryCollection;
+
+var collection;
+var salesRecordCollection;
+
 
 const prefix = process.env.PREFIX;
 
@@ -35,23 +37,26 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 			console.log('unable to create index to this collection. Error dump: ', err);
 		}
 	});
-	turnipCollection.createIndex(priceIndex);
-	turnipCollection.createIndex(expIndex, {expireAfterSeconds : 0});
 
-	client.db().collection('Inventory', function (err, returncollection) {
+	collection.createIndex(priceIndex);
+	collection.createIndex(expIndex, {expireAfterSeconds : 0});
+
+	client.db().collection('SalesRecord', function (err, returncollection) {
+
 		if(err){
 			console.log('unable to connect to the designated db/collection. Error dump: ', err);
 		}
 		else {
 			console.log('Connection to db and collection estalished.');
 		}
-		fossilInventoryCollection = returncollection;
+
+		salesRecordCollection = returncollection;
 	});
-	fossilInventoryCollection.createIndex(userIDindex, {unique: true}, function(err, result){
+	salesRecordCollection.createIndex(userIDindex, {unique: true}, function(err, result){
 		if(err){
-			console.log('unable to create index to this collection. Error dump: ', err);
+			console.log('unable to create index to the salesRecordCollection. Error dump: ', err);
 		}
-	});
+	})
 
 });
 
@@ -123,73 +128,27 @@ client.on('message', async message => {
 			}
 			var id = message.author.id;
 			var expDate = new Date();
-			var mod = 0;
-			if (expDate.getUTCHours() > 11) mod = 1; 
-			expDate = new Date(expDate.getUTCFullYear(), expDate.getUTCMonth(), expDate.getUTCDate() + mod, 11, 0, 0, 0);
-			turnipCollection.updateOne({ userid: id }, { $set: { price: parseInt(args[0]), expireAt: expDate}}, { upsert: true});
+
+			var dayModifier = 0;
+			if (expDate.getUTCHours() > 11) dayModifier = 1; 
+			expDate = new Date(expDate.getUTCFullYear(), expDate.getUTCMonth(), expDate.getUTCDate() + dayModifier, 11, 0, 0, 0);
+			collection.updateOne({ userid: id }, { $set: { price: parseInt(args[0]), expireAt: expDate}}, { upsert: true});
+
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
 	}
 
-	else if (command === 'addfossil'){
-		var fossilName = []
-		var fossilCount = []
-		for ( var i = 0; i < args.length; i++ ) {
-			if(!isNaN(args[i])){
-				fossilName.push(args[i].toLowerCase())
-			}
-			else{
-				fossilCount.push(parseInt(args[i]))
-			}
+	else if (command == 'boughtat'){
+		if(args.length !== 2){
+			return message.channel.send('You have invalid number of arguments: ' + args.length);
 		}
-
-		if(fossilName.length != fossilCount.length){
-			return message.channel.send("You either have entered too many numbers or too many fossil names!");
+		else if (isNaN(args[0]) || isNaN(args[1])){
+			return message.channel.send('At least one of your arguments is not a number!');
 		}
-
-		var id = message.author.id;
-		fossilInventoryCollection.findOne({userid: value.id}).then( function (result){
-			var existingNames = [];
-			var existingQty = [];
-			if(result){
-				existingNames = result.Names;
-				existingQty = result.Qty;
-			}
-			existingNames = existingNames.concat(result.Names)
-			existingQty = existingQty.concat(result.Qty)
-
-			fossilInventoryCollection.updateOne({userid: id}, { $set: {Names: existingNames, Qty: existingQty}})
-		})
-	}
-
-	else if (command === 'showfossil'){
-		for (var i = 0; i < args.length; i++){
-			console.log(args[i]);
-			var id = args[i].toString().replace(/[\\<>@#&!]/g, "");
-			message.guild.members.fetch(id).then (function (value){
-				fossilInventoryCollection.findOne({userid: value.id}).then( function (result){
-					if (!result){
-						message.channel.send(`${value} did not report any spare fossils.`);
-					}
-					else{
-						var results = value.displayName + 'has some spare fossils:\n'
-						
-						for(var i = 0; i < result.Names.length; i++){
-							result += result.Names[i] + ': ' + result.Qty[i] + '\n'
-						}
-
-
-
-
-						message.channel.send(result)
-					}
-				}).catch((err) => {
-					console.error("An error has occured when trying to retrieve record for" + id.toString() + ":", err);
-				})
-			}).catch((()=>{
-				return message.channel.send('**' + id + '** is not a valid member in this server!');
-			}))
-		}
+		
+		var authorId = message.author.id;
+		salesRecordCollection.updateOne({ userid: authorId }, { $set: {buyprice: parseInt(args[0]), qty: parseInt(args[1])}}, { upsert: true});
+		message.channel.send(message.author.displayName + ' has bought ' + args[1] + ' turnips at ' + args[0] + ' bells!');
 	}
 
 
