@@ -117,7 +117,7 @@ client.on('message', async message => {
 async function processCommand(actualCommand, message){
 	console.log("Passed in command: " + actualCommand);
 	
-	const args = actualCommand.slice(prefix.length).trim().split(/ +/);
+	var args = actualCommand.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
 	if (command === 'getprice'){
