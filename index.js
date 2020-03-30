@@ -88,14 +88,8 @@ client.on('message', async message => {
 	var actualCommand = '';
 	
 	if (message.author.bot) return;
-	if (!message.content.startsWith(prefix)){
-		var falseCommand = message.content.substr(0, message.content.indexOf(' '));
-		if(stringSimilarity.compareTwoStrings(prefix, falseCommand) > 0.6){
-			message.channel.send("Did you mean: **!turnip**?");
-		}
-		return;
-	}
-	else if (message.content.startsWith('!fuck')){
+	
+	if (message.content.startsWith('!fuck')){
 		wrongCommandsCollection.findOne({userid: message.author.id}).then( function (result){
 			if(!result){
 				return message.channel.send('But sir, there\'s nothing to be corrected...');
@@ -104,6 +98,13 @@ client.on('message', async message => {
 		}).catch( (err) =>{
 			console.log(err);
 		})
+	}
+	else if (!message.content.startsWith(prefix)){
+		var falseCommand = message.content.substr(0, message.content.indexOf(' '));
+		if(stringSimilarity.compareTwoStrings(prefix, falseCommand) > 0.6){
+			message.channel.send("Did you mean: **!turnip**?");
+		}
+		return;
 	}
 	else{
 		actualCommand = message.content;
