@@ -4,7 +4,7 @@ const mongodb = require ('mongodb');
 const mongoClient = mongodb.MongoClient;
 const client = new Discord.Client();
 
-var collection;
+var turnipCollection;
 var salesRecordCollection;
 
 
@@ -38,8 +38,8 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 		}
 	});
 
-	collection.createIndex(priceIndex);
-	collection.createIndex(expIndex, {expireAfterSeconds : 0});
+	turnipCollection.createIndex(priceIndex);
+	turnipCollection.createIndex(expIndex, {expireAfterSeconds : 0});
 
 	client.db().collection('SalesRecord', function (err, returncollection) {
 
@@ -132,7 +132,7 @@ client.on('message', async message => {
 			var dayModifier = 0;
 			if (expDate.getUTCHours() > 11) dayModifier = 1; 
 			expDate = new Date(expDate.getUTCFullYear(), expDate.getUTCMonth(), expDate.getUTCDate() + dayModifier, 11, 0, 0, 0);
-			collection.updateOne({ userid: id }, { $set: { price: parseInt(args[0]), expireAt: expDate}}, { upsert: true});
+			turnipCollection.updateOne({ userid: id }, { $set: { price: parseInt(args[0]), expireAt: expDate}}, { upsert: true});
 
 			message.channel.send(`${message.author} has set their turnip price of the day at ${args[0]}`);
 		}
