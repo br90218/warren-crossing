@@ -72,7 +72,7 @@ client.on('message', async message => {
 
 	if (message.author.bot) return;
 	if (!message.content.startsWith(prefix)){
-		var falseCommand = message.content.substr(0, str.indexOf(' '));
+		var falseCommand = message.content.substr(0, message.content.indexOf(' '));
 		if(stringSimilarity.compareTwoStrings(prefix, falseCommand) > 0.6){
 			message.channel.send("Did you mean: **!turnip**?");
 		}
