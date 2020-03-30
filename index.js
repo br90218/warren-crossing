@@ -95,7 +95,7 @@ client.on('message', async message => {
 				return message.channel.send('But sir, there\'s nothing to be corrected...');
 			}
 			console.log("Result:" + result.command);
-			await processCommand(result.command);
+			await processCommand(result.command, message);
 		}).catch( (err) =>{
 			console.log(err);
 		})
@@ -109,12 +109,12 @@ client.on('message', async message => {
 	}	
 	else{
 		actualCommand = message.content;
-		await processCommand(message.content);
+		await processCommand(message.content, message);
 	}
 })
 
 
-async function processCommand(actualCommand){
+async function processCommand(actualCommand, message){
 	console.log("Passed in command: " + actualCommand);
 	
 	const args = actualCommand.slice(prefix.length).trim().split(/ +/);
