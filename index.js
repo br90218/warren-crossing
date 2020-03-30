@@ -85,17 +85,17 @@ client.once('ready', function () {
 
 client.on('message', async message => {
 	//if (!message.content.startsWith(prefix) || message.author.bot) return;
-	var actualCommand = '';
+	var actualCommand;
 	
 	if (message.author.bot) return;
 	
 	if (message.content.startsWith('!fuck')){
-		wrongCommandsCollection.findOne({userid: message.author.id}).then( function (result){
+		wrongCommandsCollection.findOne({userid: message.author.id}).then(function (result){
 			if(!result){
 				return message.channel.send('But sir, there\'s nothing to be corrected...');
 			}
 			console.log("Result:" + result.command);
-			actualCommand = result.command;
+			processCommand(result.command);
 		}).catch( (err) =>{
 			console.log(err);
 		})
@@ -109,8 +109,12 @@ client.on('message', async message => {
 	}	
 	else{
 		actualCommand = message.content;
+		processCommand(message.content);
 	}
+})
 
+
+function processCommand(actualCommand){
 	console.log("Passed in command: " + actualCommand);
 	
 	const args = actualCommand.slice(prefix.length).trim().split(/ +/);
@@ -249,7 +253,8 @@ client.on('message', async message => {
 		wrongCommandsCollection.updateOne({userid: message.author.id}, { $set: { command: correctedCommand }}, {upsert: true});
 		message.channel.send("Did you mean: **" + correctedCommand + "**?");
 	};	
-})
+}
+
 
 client.login(process.env.BOT_TOKEN);
 
