@@ -138,9 +138,9 @@ client.on('message', async message => {
 		}
 	}
 
-	else if (command == 'boughtat'){
+	else if (command === 'boughtat'){
 		if(args.length !== 2){
-			return message.channel.send('You have invalid number of arguments: ' + args.length);
+			return message.channel.send('The **boughtat** command takes exactly **2** arguments. You typed in: ' + args.length);
 		}
 		else if (isNaN(args[0]) || isNaN(args[1])){
 			return message.channel.send('At least one of your arguments is not a number!');
@@ -149,6 +149,36 @@ client.on('message', async message => {
 		var authorId = message.author.id;
 		salesRecordCollection.updateOne({ userid: authorId }, { $setOnInsert:{netprofit: 0}, $set: {buyprice: parseInt(args[0]), qty: parseInt(args[1])}}, { upsert: true});
 		message.channel.send(message.guild.member(message.author).displayName + ' has bought ' + args[1] + ' turnips at ' + args[0] + ' bells!');
+	}
+
+	else if (command === 'soldat'){
+		if(args.length !== 2){
+			return message.channel.send('The **soldat** command takes exactly **2** arguments. You typed in: ' + args.length);
+		}
+		else if (isNaN(args[0]) || isNaN(args[1])){
+			return message.channel.send('At least one of your arguments is not a number!');
+		}
+
+		var authorId = message.author.id;
+		salesRecordCollection.findOne({userid: authorId}).then( function(result){
+			if(!result){
+				return message.reply("it seems like you don't have any sales records with me yet!");
+			}
+			else if(result.qty < parseInt(args[1])){
+				return message.reply("it seems like you're selling more than what you have...");
+			}
+
+			var currProfit = (parseInt(args[1])) * (parseInt(args[0]) - result.buyprice);
+			var remainingQty = result.qty - parseInt(args[1]);
+
+			salesRecordCollection.updateOne({userid:authorId}, {$set: {netprofit: currProfit, qty: remainingQty}});
+			message.channel.send(messag.guild.member(message.author).displayName + 'has sold ' + args[1] + ' turnips at ' + args[0] + ' bells, making them a net profit of **' + currProfit + '** bells!');
+		}
+
+	}
+
+	else if (command === 'getrecords'){
+
 	}
 
 
