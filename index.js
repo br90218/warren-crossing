@@ -111,7 +111,7 @@ client.on('message', async message => {
 		actualCommand = message.content;
 	}
 
-	console.log(actualCommand);
+	console.log("Passed in command: " + actualCommand);
 	
 	const args = actualCommand.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
