@@ -172,7 +172,7 @@ client.on('message', async message => {
 			var remainingQty = result.qty - parseInt(args[1]);
 
 			salesRecordCollection.updateOne({userid:authorId}, {$set: {netprofit: currProfit, qty: remainingQty}});
-			message.channel.send(messag.guild.member(message.author).displayName + 'has sold ' + args[1] + ' turnips at ' + args[0] + ' bells, making them a net profit of **' + currProfit + '** bells!');
+			message.channel.send(message.guild.member(message.author).displayName + 'has sold ' + args[1] + ' turnips at ' + args[0] + ' bells, making them a net profit of **' + currProfit + '** bells!');
 		}).catch( (err) => {
 			console.log(err);
 		})
