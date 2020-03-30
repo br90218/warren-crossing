@@ -95,7 +95,7 @@ client.on('message', async message => {
 				return message.channel.send('But sir, there\'s nothing to be corrected...');
 			}
 			console.log("Result:" + result.command);
-			processCommand(result.command);
+			await processCommand(result.command);
 		}).catch( (err) =>{
 			console.log(err);
 		})
@@ -109,7 +109,7 @@ client.on('message', async message => {
 	}	
 	else{
 		actualCommand = message.content;
-		processCommand(message.content);
+		await processCommand(message.content);
 	}
 })
 
