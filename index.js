@@ -253,12 +253,12 @@ async function processCommand(actualCommand, message){
 		var firstTrailing = args[0];
 
 		if (correctedCommand === 'getprice' || correctedCommand === 'setprice'){
-			if(stringSimilarity.compareTwoStrings(correctedCommand, 'price') > 0.5){
+			if(stringSimilarity.compareTwoStrings(firstTrailing, 'price') > 0.5){
 				args.shift();
 			}
 		}
 		else if (correctedCommand === 'boughtat' || correctedCommand === 'soldat'){
-			if(stringSimilarity.compareTwoStrings(correctedCommand, 'at') > 0.5){
+			if(stringSimilarity.compareTwoStrings(firstTrailing, 'at') > 0.5){
 				args.shift();
 			}
 		}
