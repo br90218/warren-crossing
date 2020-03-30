@@ -90,7 +90,7 @@ client.on('message', async message => {
 	if (message.author.bot) return;
 	
 	if (message.content.startsWith('!fuck')){
-		wrongCommandsCollection.findOne({userid: message.author.id}).then(function (result){
+		wrongCommandsCollection.findOne({userid: message.author.id}).then(async function (result){
 			if(!result){
 				return message.channel.send('But sir, there\'s nothing to be corrected...');
 			}
