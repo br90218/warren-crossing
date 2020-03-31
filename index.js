@@ -251,7 +251,7 @@ async function processCommand(actualCommand, message){
 					resultMessage += ' - Your net profit is **' + result.netprofit + '** bells, ';
 
 					
-					var arr = await salesRecordCollection.aggregate([{
+					await salesRecordCollection.aggregate([{
 						$project: {
 							_id: 1,
 							userid: "$userid",
