@@ -251,20 +251,20 @@ async function processCommand(actualCommand, message){
 		var correctedString = stringSimilarity.findBestMatch(command, ['getprice','setprice','boughtat','soldat','help','updates']).bestMatch.target;
 		var correctedCommand = '!turnip '+ correctedString;
 
-		var firstTrailing = args[0];
-
-		if (correctedString === 'getprice' || correctedString === 'setprice'){
-			if(stringSimilarity.compareTwoStrings(firstTrailing, 'price') > 0.5){
-				args.shift();
+		if(args.length > 0){
+			var firstTrailing = args[0];
+			if (correctedString === 'getprice' || correctedString === 'setprice'){
+				if(stringSimilarity.compareTwoStrings(firstTrailing, 'price') > 0.5){
+					args.shift();
+				}
 			}
-		}
-		else if (correctedString === 'boughtat' || correctedString === 'soldat'){
-			if(stringSimilarity.compareTwoStrings(firstTrailing, 'at') > 0.5){
-				args.shift();
+			else if (correctedString === 'boughtat' || correctedString === 'soldat'){
+				if(stringSimilarity.compareTwoStrings(firstTrailing, 'at') > 0.5){
+					args.shift();
+				}
 			}
-		}
-
-		if(args.length > 0) correctedCommand += ' ' + args.join(' ');
+			correctedCommand += ' ' + args.join(' ');
+		}	
 		wrongCommandsCollection.updateOne({userid: message.author.id}, { $set: { command: correctedCommand }}, {upsert: true});
 		message.channel.send("Did you mean: **" + correctedCommand + "**?");
 	};	
