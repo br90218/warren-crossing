@@ -231,12 +231,15 @@ async function processCommand(actualCommand, message){
 
 
 	else if (command === 'help'){
-		message.channel.send('Hi! This is Warren Turnip. I help keep track of everyone\'s turnip price of the day.');
-		message.channel.send('Use **!turnip setprice [PRICE]** to report your price today');
-		message.channel.send('Use **!turnip getprice [@USER1, @USER2, @USER3...]** to check for their offers today (If USER is not specified, I will tell you everyone\'s offers today!');
-		message.channel.send('Use **!turnip boughtat [PRICE] [QUANTITY]** to report how many turnips you bought at PRICE.');
-		message.channel.send('Use **!turnip soldat [PRICE] [QUANTITY]** to report how many turnips you sold at PRICE.');
-		message.channel.send('(The _soughtat_, _boughtat_ commands assume an "all in, all out" policy. If you buy in different strategies, I might not be able to calculate your profit correctly.)')
+		var helpMessage = 'Hi! This is Warren Turnip. I help keep track of everyone\'s turnip price of the day. Here are the commands you can use:\n';
+		helpMessage += '- **!turnip setprice [PRICE]** to report your price today\n';
+		helpMessage += '- **!turnip getprice [@USER1, @USER2, @USER3...]** to check for their offers today (If USER is not specified, I will tell you everyone\'s offers today!\n';
+		helpMessage += '- **!turnip boughtat [PRICE] [QUANTITY]** to report how many turnips you bought at PRICE.\n';
+		helpMessage += '- **!turnip soldat [PRICE] [QUANTITY]** to report how many turnips you sold at PRICE.\n';
+		helpMessage += '(The _soughtat_, _boughtat_ commands assume an "all in, all out" policy. If you buy in different strategies, I might not be able to calculate your profit correctly.)\n';
+		helpMessage += '- **Accidentally mistyped a command? Try the **!fuck** command!';
+
+		message.channel.send(helpMessage);
 	}
 
 	else if (command === 'updates'){
