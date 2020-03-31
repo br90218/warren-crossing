@@ -246,6 +246,7 @@ async function processCommand(actualCommand, message){
 		var info = 'Hi! It\'s Warren Turnip here. I can now do more things:\n'
 		info += '- **boughtat [price] [quantity]** will record how many turnips you bought, at what price on Sunday, conversely:\n'
 		info += '- **soldat [price] [quantity]** will record how many turnips you sold at a given price. I\'ll also take notes of the net profit you\'ve earned!\n'
+		info += '- Tired of mistyping commands? Try the **!fuck** command!\n'
 		info += '...\nThat\'s pretty much it! Let Brian know if anything wrong happens to me again!\n'
 
 
