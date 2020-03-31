@@ -251,7 +251,7 @@ async function processCommand(actualCommand, message){
 					resultMessage += ' - Your net profit is **' + result.netprofit + '** bells, ';
 
 					
-					await salesRecordCollection.aggregate([{
+					var arr = await salesRecordCollection.aggregate([{
 						$project: {
 							_id: 1,
 							userid: "$userid",
@@ -281,6 +281,7 @@ async function processCommand(actualCommand, message){
 						console.log(result);
 						for(var i = 0 ; i < result.length ; i++){
 							if(result.userid === authorId){
+								console.log('here');
 								resultMessage += 'which is number ' + ( result.profitRank + 1 ) + ' out of ' + (result.length + 1) + '.\n' ;
 							}
 						}
