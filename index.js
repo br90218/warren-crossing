@@ -291,7 +291,7 @@ async function processCommand(actualCommand, message){
 		else{
 
 		}
-		Console.log(resultMessage);
+		console.log(resultMessage);
 
 		message.channel.send(resultMessage);
 	}
