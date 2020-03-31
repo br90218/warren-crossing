@@ -278,9 +278,7 @@ async function processCommand(actualCommand, message){
 						}
 						}
 					]).toArray().then( function(result){
-						console.log(result);
 						for(var i = 0 ; i < result.length ; i++){
-							console.log(result[i].arr.userid + ' ' + authorId);
 
 							if(result[i].arr.userid == authorId){
 
@@ -327,7 +325,7 @@ async function processCommand(actualCommand, message){
 	}
 
 	else{
-		var correctedString = stringSimilarity.findBestMatch(command, ['getprice','setprice','boughtat','soldat','help','updates']).bestMatch.target;
+		var correctedString = stringSimilarity.findBestMatch(command, ['getprice','setprice','boughtat','soldat','help','updates','getrecords']).bestMatch.target;
 		var correctedCommand = '!turnip '+ correctedString;
 
 		if(args.length > 0){
@@ -351,8 +349,3 @@ async function processCommand(actualCommand, message){
 
 
 client.login(process.env.BOT_TOKEN);
-
-
-//var targetMember = await client.users.fetch(id);
-						//result = result.concat(result,`${targetMember}'s island is buying turnips at **`, reply, '** bells!\n');
-						//message.channel.send(`${targetMember}'s island is buying turnips at **` + reply + '** bells!\n');
