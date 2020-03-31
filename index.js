@@ -73,11 +73,13 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 	});
 
 	
-	wrongCommandsCollection.createIndex(userIDindex, {unique: true, expireAfterSeconds : 20}, function(err, result){
+	wrongCommandsCollection.createIndex(userIDindex, {unique: true} , function(err, result){
 		if(err){
 			console.log('unable to create index to the wrongCommandsCollection. Error dump: ', err);
 		}
 	});
+
+	wrongCommandsCollection.createIndex({createdAt : 1}, {expireAfterSeconds: 20});
 })
 
 client.once('ready', function () {
@@ -265,7 +267,7 @@ async function processCommand(actualCommand, message){
 			}
 			correctedCommand += ' ' + args.join(' ');
 		}	
-		wrongCommandsCollection.updateOne({userid: message.author.id}, { $set: { command: correctedCommand }}, {upsert: true});
+		wrongCommandsCollection.updateOne({userid: message.author.id}, { $set: { command: correctedCommand, createdAt: new Date() }}, {upsert: true});
 		message.channel.send("Did you mean: **" + correctedCommand + "**?");
 	};	
 }
