@@ -284,7 +284,7 @@ async function processCommand(actualCommand, message){
 
 							if(result[i].arr.userid == authorId){
 
-								resultMessage += 'which is number ' + ( result.profitRank + 1 ) + ' out of ' + (result.length + 1) + '.\n' ;
+								resultMessage += 'which is number ' + ( result[i].profitRank + 1 ) + ' out of ' + result.length + '.\n' ;
 							}
 						}
 					})
