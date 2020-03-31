@@ -226,7 +226,74 @@ async function processCommand(actualCommand, message){
 	}
 
 	else if (command === 'getrecords'){
+		var resultMessage;
+		if(args.length === 0){
+			resultMessage += 'About your record:\n';
+			var authorId = message.author.id;
+			await turnipCollection.findOne({userid : authorId}).then( function (result){
+				if(!result){
+					resultMessage += ' - You did not report your island\'s turnip buying price today! >:(\n';
+				}
+				else{
+					resultMessage += ' - Your island is buying turnips at **' + result.price + '** bells.\n';
+				} 
+			}).catch( (err) => {
+				console.log(err);
+			})
 
+
+			await salesRecordCollection.findOne({userid: authorId}).then ( function (result){
+				if(!result){
+					resultMessage += ' - As of now, you do not have any sales records!\n';
+				}
+				else{
+					resultMessage += ' - According to your latest record, you last purchased turnips at **' + result.buyprice + '** bells. You currently still have **' + result.qty + '** turnips.\n';
+					resultMessage += ' - Your net profit is **' + result.netprofit + '** bells, ';
+
+					
+					await salesRecordCollection.aggregate([{
+						$project: {
+							_id: 1,
+							userid: "$userid",
+							netprofit: "$netprofit"
+						}
+					}, {
+						$sort: {
+							netprofit: -1
+						}
+					}, {
+						$group: {
+							_id: {},
+							arr: {
+								$push: {
+									userid: "$userid",
+									netprofit: "$netprofit"
+								}
+							}
+						}
+					}, {
+						$unwind: {
+							path: '$arr',
+							includeArrayIndex: "profitRank"
+						}
+						}
+					]).toArray().then( function(result){
+						for(var i = 0 ; i < result.length ; i++){
+							if(result.userid === authorId){
+								resultMessage += 'which is number ' + ( result.profitRank + 1 ) + ' out of ' + (result.length + 1) + '.\n' ;
+							}
+						}
+					})
+				}
+			})
+			
+		}
+		else{
+
+		}
+		Console.log(resultMessage);
+
+		message.channel.send(resultMessage);
 	}
 
 
@@ -237,7 +304,7 @@ async function processCommand(actualCommand, message){
 		helpMessage += '- **!turnip boughtat [PRICE] [QUANTITY]** to report how many turnips you bought at PRICE.\n';
 		helpMessage += '- **!turnip soldat [PRICE] [QUANTITY]** to report how many turnips you sold at PRICE.\n';
 		helpMessage += '(The _soughtat_, _boughtat_ commands assume an "all in, all out" policy. If you buy in different strategies, I might not be able to calculate your profit correctly.)\n';
-		helpMessage += '- **Accidentally mistyped a command? Try the **!fuck** command!';
+		helpMessage += '- Accidentally mistyped a command? Try the **!fuck** command!';
 
 		message.channel.send(helpMessage);
 	}
