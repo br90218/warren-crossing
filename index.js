@@ -242,7 +242,7 @@ async function processCommand(actualCommand, message){
 			})
 
 
-			await salesRecordCollection.findOne({userid: authorId}).then ( function (result){
+			await salesRecordCollection.findOne({userid: authorId}).then ( async function (result){
 				if(!result){
 					resultMessage += ' - As of now, you do not have any sales records!\n';
 				}
