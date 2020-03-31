@@ -282,7 +282,7 @@ async function processCommand(actualCommand, message){
 						for(var i = 0 ; i < result.length ; i++){
 							console.log(result[i].arr.userid + ' ' + authorId);
 
-							if(result[i].userid == authorId){
+							if(result[i].arr.userid == authorId){
 
 								resultMessage += 'which is number ' + ( result.profitRank + 1 ) + ' out of ' + (result.length + 1) + '.\n' ;
 							}
