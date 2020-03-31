@@ -71,12 +71,13 @@ mongoClient.connect(process.env.MONGODB_URI, function(err, client) {
 		}
 		wrongCommandsCollection = returncollection;
 	});
-	wrongCommandsCollection.createIndex(userIDindex, {unique: true}, function(err, result){
+
+	
+	wrongCommandsCollection.createIndex(userIDindex, {unique: true, expireAfterSeconds : 20}, function(err, result){
 		if(err){
 			console.log('unable to create index to the wrongCommandsCollection. Error dump: ', err);
 		}
 	});
-	wrongCommandsCollection.createIndex(expIndex, {expireAfterSeconds : 20})
 })
 
 client.once('ready', function () {
@@ -252,12 +253,12 @@ async function processCommand(actualCommand, message){
 
 		var firstTrailing = args[0];
 
-		if (correctedCommand === 'getprice' || correctedCommand === 'setprice'){
+		if (correctedString === 'getprice' || correctedString === 'setprice'){
 			if(stringSimilarity.compareTwoStrings(firstTrailing, 'price') > 0.5){
 				args.shift();
 			}
 		}
-		else if (correctedCommand === 'boughtat' || correctedCommand === 'soldat'){
+		else if (correctedString === 'boughtat' || correctedString === 'soldat'){
 			if(stringSimilarity.compareTwoStrings(firstTrailing, 'at') > 0.5){
 				args.shift();
 			}
