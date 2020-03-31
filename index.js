@@ -280,7 +280,7 @@ async function processCommand(actualCommand, message){
 					]).toArray().then( function(result){
 						console.log(result);
 						for(var i = 0 ; i < result.length ; i++){
-							console.log(result[i].userid + ' ' + authorId);
+							console.log(result[i].arr.userid + ' ' + authorId);
 
 							if(result[i].userid == authorId){
 
