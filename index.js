@@ -215,7 +215,7 @@ async function processCommand(actualCommand, message){
 				return message.reply("it seems like you're selling more than what you have...");
 			}
 
-			var currProfit = (parseInt(args[1])) * (parseInt(args[0]) - result.buyprice);
+			var currProfit = (parseInt(args[1])) * (parseInt(args[0]) - result.buyprice) + result.netprofit;
 			var remainingQty = result.qty - parseInt(args[1]);
 
 			salesRecordCollection.updateOne({userid:authorId}, {$set: {netprofit: currProfit, qty: remainingQty}});
